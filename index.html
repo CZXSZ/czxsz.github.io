@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--[if IE 9]>
+<html class="ie" lang="en">
+<![endif]-->
+<html lang="en">
+
+<head>
+    <link rel="icon" href="" type="image/x-icon">
+    
+    
+</style>
+    <meta charset="utf-8">
+    <title>成章实验中学</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Specific Mega  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Raleway:400,600,700" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!--Owl Carousel CSS -->
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <!-- Animated CSS -->
+    <link rel="stylesheet" href="css/animate.min.css">
+    <!-- Prettyphoto Css -->
+    <link rel="stylesheet" href="css/prettyPhoto.css">
+    <!-- Theme CSS-->
+    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>嵌入网站示例</title>
+    <style>
+        /* 设置body的margin为0，去除默认的边距 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* 防止出现滚动条 */
+        }
+        /* 使iframe充满整个页面 */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* 去除iframe的默认边框 */
+        }
+    </style>
+</head>
+<body>
+
+<iframe src="https://link3.cc/czsyzx" frameborder="0"></iframe>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>倒计时示例</title>
+    <style>
+        body {
+            position: relative; /* 为body添加相对定位，作为倒计时的定位基准 */
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 600px; /* 限制图片的最大宽度，确保在小屏幕上也能良好显示 */
+            border-radius: 15px; /* 设置图片四角圆润 */
+            display: block; /* 确保图片不留空白 */
+            margin: 0 auto; /* 图片居中显示 */
+            position: relative;
+        }
+
+        .countdown {
+            position: absolute; /* 使用绝对定位 */
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            padding: 10px;
+            border-radius: 5px; /* 倒计时背景四角圆润 */
+            left: 20px; /* 将倒计时向左移动，使其靠近图片的左边 */
+        }
+
+        #countdown1 {
+            top: 20px;
+        }
+
+        #countdown2 {
+            top: 80px; /* 调整第二个倒计时的顶部位置，使其显示在第一个倒计时下方 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="image-container">
+    <img src="your-image-url.jpg" alt="示例图片">
+    <div id="countdown1" class="countdown"></div>
+    <div id="countdown2" class="countdown"></div>
+</div>
+
+<script>
+function updateCountdown(targetDate, elementId, countdownLabel) {
+    var now = new Date().getTime();
+    var distance = targetDate - now;
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById(elementId).innerHTML = countdownLabel + days + "天 " + hours + "小时 "
+    + minutes + "分 " + seconds + "秒 ";
+
+    if (distance < 0) {
+        clearInterval(interval);
+        document.getElementById(elementId).innerHTML = countdownLabel + "倒计时结束";
+    }
+}
+
+var countdownDate1 = new Date("June 20, 2024 00:00:00").getTime();
+var countdownDate2 = new Date("June 18, 2024 00:00:00").getTime();
+
+setInterval(function() {
+    updateCountdown(countdownDate1, "countdown1", "中考剩余：");
+    updateCountdown(countdownDate2, "countdown2", "会考剩余：");
+}, 1000);
+</script>
+
+</body>
+</html>
+
