@@ -154,14 +154,16 @@ setInterval(function() {
             font-family: customFont;
             src: url('zt/字魂白鸽天行体.ttf');
         }
+        body {
+            font-family: customFont; /* 设置页面默认字体为自定义字体 */
+        }
         #text {
-            font-family: customFont;
             font-size: 36px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: fadeOut 7s forwards;
+            animation: fadeOut 3s forwards;
         }
         @keyframes fadeOut {
             0% { opacity: 1; }
@@ -171,10 +173,23 @@ setInterval(function() {
 </head>
 <body>
     <div id="text">
-        <p style="text-align: center;">你好成章祝各位成章学子</p>
-        <p style="text-align: center;">中考大捷 成章必胜</p>
+        <p style="text-align: center;">你好成章祝成章学子</p>
+        <p style="text-align: center;">中考大捷  成章必胜</p>
     </div>
+
+
+    
 </body>
+
+
+<style>
+    /* 隐藏指定样式的内容 */
+    span[style="font-size: 14px; font-weight: bold; padding: 0px 20px;"] {
+        display: none !important;
+    }
+</style>
+
+
 </html>
 
 </body>
