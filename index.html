@@ -44,6 +44,42 @@
 </head>
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圆角长方形按钮</title>
+<style>
+.button-container {
+  position: fixed;
+  bottom: 30px;
+  left: 49%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 100%;
+}
+
+.button {
+  display: inline-block;
+  padding: 15px 40px;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+<div class="button-container">
+  <a class="button" href="https://qun.qq.com/qqweb/qunpro/share?_wv=3&_wwv=128&appChannel=share&inviteCode=1ZC9e0nJjEl&jumpsource=shorturl#/">加入频道了解更多</a>
+</div>
+</body>
+</html>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -138,10 +174,11 @@ var countdownDate1 = new Date("June 18, 2024 00:00:00").getTime();
 var countdownDate2 = new Date("June 20, 2024 00:00:00").getTime();
 
 setInterval(function() {
-    updateCountdown(countdownDate1, "countdown1", "中考剩余：");
-    updateCountdown(countdownDate2, "countdown2", "会考剩余：");
+    updateCountdown(countdownDate1, "countdown1", "中考仅剩：");
+    updateCountdown(countdownDate2, "countdown2", "会考仅剩：");
 }, 1000);
 </script>
+
 
 
 
