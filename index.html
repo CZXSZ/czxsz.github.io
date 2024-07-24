@@ -436,3 +436,16 @@
 
 </html>
 
+<script>
+    window.chat_iframe_src = 'https://1fooai.com/chat/js-75c800787e0d2d39fa5a999d5e4e1633wFAVI'
+    window.chat_iframe_width = '375px' //聊天窗口宽
+    window.chat_iframe_height = '667px'  //聊天窗口高
+    window.chat_icon_bg = '#3C5EFD' //聊天悬浮按钮背景
+    window.chat_icon_color = '#fff' //聊天悬浮按钮颜色
+    var js = document.createElement('script')
+    js.type = 'text/javascript'
+    js.async = true
+    js.src = 'https://1fooai.com/js-iframe.js'
+    var header = document.getElementsByTagName('head')[0]
+    header.appendChild(js)
+</script>
