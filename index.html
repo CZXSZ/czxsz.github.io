@@ -1,0 +1,303 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>衡阳市成章实验中学</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .embed-container {
+            width: 100%;
+            height: 100%;
+        }
+        .embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* 美化按钮样式 */
+        .download-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .download-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .download-btn i {
+            font-size: 18px;
+        }
+        
+        /* 下载动画 */
+        .download-btn.downloading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: width 1s linear;
+        }
+        .download-btn.downloading::before {
+            content: '下载中...';
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+        .download-btn.downloading span {
+            display: none;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        /* 美化弹窗样式 */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup {
+            background-color: white;
+            padding: 35px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .popup-overlay.active .popup {
+            transform: translateY(0) scale(1);
+        }
+        
+        /* 弹窗装饰元素 */
+        .popup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+        
+        .popup-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup-icon i {
+            font-size: 36px;
+            color: #2563eb;
+        }
+        
+        .popup h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        .popup p {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .popup-btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+        .popup-btn.confirm {
+            background-color: #2563eb;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .popup-btn.confirm:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+        .popup-btn.confirm:active {
+            transform: translateY(0);
+        }
+        .popup-btn.later {
+            background-color: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        .popup-btn.later:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        .popup-btn.later:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="embed-container">
+        <iframe src="https://pd.qq.com/g/20czsyzx24" title="衡阳市成章实验中学页面"></iframe>
+    </div>
+    
+    <div class="download-buttons">
+        <a href="https://d.feiliupan.com/t/47455336386269184/24CZbyz.jpg" class="download-btn" download="">
+            <i class="fas fa-download"></i>
+            <span>24届毕业照</span>
+        </a>
+        <a href="https://d.feiliupan.com/t/47455336386269184/323342143d703a1049e2aeba45f1a8ec.png" class="download-btn" download="">
+            <i class="fas fa-download"></i>
+            <span>23届毕业照</span>
+        </a>
+    </div>
+    
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3>加入我们的频道吧！</h3>
+            <p>这里有更多学校最新资讯和同学交流，快来加入吧！与同学们一起分享校园生活。</p>
+            <div class="popup-buttons">
+                <button class="popup-btn confirm" id="confirmBtn">我自行加入</button>
+                <button class="popup-btn later" id="laterBtn">稍后</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 下载按钮动画效果
+        const downloadBtns = document.querySelectorAll('.download-btn');
+        downloadBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.classList.contains('downloading')) return;
+                
+                this.classList.add('downloading');
+                
+                // 模拟下载进度
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            this.classList.remove('downloading');
+                        },3000);
+                    } else {
+                        width += 5;
+                        this.querySelector('::after').style.width = width + '%';
+                    }
+                }, 150);
+            });
+        });
+        
+        // 弹窗功能
+        const popupOverlay = document.getElementById('popupOverlay');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const laterBtn = document.getElementById('laterBtn');
+        let reminderInterval;
+        
+        function showPopup() {
+            popupOverlay.classList.add('active');
+        }
+        
+        function hidePopup() {
+            popupOverlay.classList.remove('active');
+        }
+        
+        // 10秒后显示弹窗
+        setTimeout(showPopup, 10000);
+        
+        // 设置定时提醒
+        function setupReminder() {
+            reminderInterval = setInterval(showPopup, 30000); // 30秒一次
+        }
+        
+        // 确认按钮事件
+        confirmBtn.addEventListener('click', () => {
+            hidePopup();
+            clearInterval(reminderInterval);
+            alert('正在加入频道...');
+        });
+        
+        // 稍后按钮事件
+        laterBtn.addEventListener('click', () => {
+            hidePopup();
+        });
+        
+        setupReminder();
+    </script>
+
+
+    </body></html>
