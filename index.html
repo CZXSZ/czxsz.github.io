@@ -1,303 +1,391 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>衡阳市成章实验中学</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>衡阳市成章实验中学腾讯频道</title>
+    <!-- 引入更现代的字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body, html {
-            height: 100%;
+        body {
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
-        .embed-container {
+        /* 1. 背景和模糊层设置 */
+        #background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            overflow: hidden;
+            z-index: 1;
         }
-        .embed-container iframe {
+        #embedded-website {
             width: 100%;
             height: 100%;
             border: none;
         }
-        
-        /* 美化按钮样式 */
-        .download-buttons {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 100;
-        }
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background-color: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 15px;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .download-btn:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-        }
-        .download-btn:active {
-            transform: translateY(0);
-        }
-        .download-btn i {
-            font-size: 18px;
-        }
-        
-        /* 下载动画 */
-        .download-btn.downloading::after {
-            content: '';
+        .blur-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: width 1s linear;
-        }
-        .download-btn.downloading::before {
-            content: '下载中...';
-            display: inline-block;
-            animation: pulse 1.5s infinite;
-        }
-        .download-btn.downloading span {
-            display: none;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
-        }
-        
-        /* 美化弹窗样式 */
-        .popup-overlay {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            background-color: rgba(0, 0, 0, 0);
+            z-index: 2;
+            pointer-events: none;
+            transition: backdrop-filter 3s ease, background-color 3s ease, pointer-events 0s;
+        }
+        .blur-overlay.active {
             backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.05);
+            pointer-events: auto;
         }
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .popup {
-            background-color: white;
-            padding: 35px;
-            border-radius: 20px;
+        
+        /* 2. 液态玻璃信息卡片 */
+        .info-card-container {
+            position: absolute;
+            bottom: -400px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
             width: 90%;
-            max-width: 420px;
+            max-width: 500px;
+            transition: bottom 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .info-card-container.active {
+            bottom: 130px; /* --- 核心改动：调整卡片位置，为导航栏腾出空间 --- */
+        }
+        .info-card-link {
+            display: block;
+            text-decoration: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px) saturate(180%) contrast(100%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%) contrast(100%);
+            border-radius: 24px;
+            padding: 40px 30px;
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
-        .popup-overlay.active .popup {
-            transform: translateY(0) scale(1);
+        .info-card-link:hover,
+        .info-card-link:focus {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
         }
-        
-        /* 弹窗装饰元素 */
-        .popup::before {
-            content: '';
+        .light-effect {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        }
-        
-        .popup-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 1;
+        }
+        .card-title {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+            color: #1677ff;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
         }
-        .popup-icon i {
-            font-size: 36px;
-            color: #2563eb;
+        .card-content {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.8;
+            font-weight: 500;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .content-highlight {
+            color: #1677ff;
+            font-weight: 700;
+        }
+        .click-indicator {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .click-indicator .pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background-color: #1677ff;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .click-indicator .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #1677ff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulse-ring 2s infinite cubic-bezier(0.24, 0, 0.38, 1);
+        }
+        .click-indicator .ring:nth-child(2) { animation-delay: 0.3s; }
+        .click-indicator .ring:nth-child(3) { animation-delay: 0.6s; }
+        .click-indicator .ring:nth-child(4) { animation-delay: 0.9s; }
+        @keyframes pulse-ring {
+            0% { width: 20px; height: 20px; opacity: 0.8; }
+            70% { width: 60px; height: 60px; opacity: 0; }
+            100% { width: 80px; height: 80px; opacity: 0; }
         }
         
-        .popup h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #1e293b;
-            font-weight: 600;
+        /* --- 核心改动：添加液态玻璃导航栏 --- */
+        .ios-nav-container {
+            position: absolute;
+            bottom: -100px; /* 初始隐藏 */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            transition: bottom 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.3s; /* 延迟显示 */
         }
-        .popup p {
-            font-size: 16px;
-            color: #64748b;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        .ios-nav-container.active {
+            bottom: 20px; /* 显示位置 */
         }
-        .popup-buttons {
+        .ios-nav {
             display: flex;
-            gap: 15px;
+            justify-content: space-around;
+            align-items: center;
+            
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            
+            border-radius: 16px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .nav-item {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-        }
-        .popup-btn {
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+            color: #333;
+            font-size: 22px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            outline: none;
+            overflow: hidden; /* 隐藏波纹效果溢出 */
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            /* --- 核心改动：添加轻微的上下浮动动画 --- */
+            animation: liquid-float 3s ease-in-out infinite;
         }
-        .popup-btn.confirm {
-            background-color: #2563eb;
-            color: white;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        /* 为每个图标设置不同的动画延迟，让浮动效果更自然 */
+        .nav-item:nth-child(1) { animation-delay: 0s; }
+        .nav-item:nth-child(2) { animation-delay: 0.7s; }
+        .nav-item:nth-child(3) { animation-delay: 1.4s; }
+        .nav-item:nth-child(4) { animation-delay: 2.1s; }
+        
+        @keyframes liquid-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
-        .popup-btn.confirm:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
         }
-        .popup-btn.confirm:active {
-            transform: translateY(0);
+        
+        /* --- 核心改动：水滴点击特效 --- */
+        .droplet-effect {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
         }
-        .popup-btn.later {
-            background-color: #f8fafc;
-            color: #64748b;
-            border: 1px solid #e2e8f0;
-        }
-        .popup-btn.later:hover {
-            background-color: #f1f5f9;
-            transform: translateY(-2px);
-        }
-        .popup-btn.later:active {
-            transform: translateY(0);
+        
+        /* 响应式适配（手机端） */
+        @media (max-width: 768px) {
+            .info-card-container.active {
+                bottom: 120px; /* 调整卡片位置 */
+            }
+            .info-card-link {
+                padding: 35px 25px;
+            }
+            .card-title {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            .card-content {
+                font-size: 16px;
+                margin-bottom: 25px;
+            }
+            .nav-item {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="embed-container">
-        <iframe src="https://pd.qq.com/g/20czsyzx24" title="衡阳市成章实验中学页面"></iframe>
+    <!-- 1. 背景层：包含iframe和初始状态无模糊的遮罩 -->
+    <div id="background-container">
+        <iframe 
+            id="embedded-website" 
+            src="https://pd.qq.com/g/20czsyzx24" 
+            title="衡阳市成章实验中学相关页面"
+        ></iframe>
+        <div id="blurOverlay" class="blur-overlay"></div>
     </div>
-    
-    <div class="download-buttons">
-        <a href="https://d.feiliupan.com/t/47455336386269184/24CZbyz.jpg" class="download-btn" download="">
-            <i class="fas fa-download"></i>
-            <span>24届毕业照</span>
-        </a>
-        <a href="https://d.feiliupan.com/t/47455336386269184/323342143d703a1049e2aeba45f1a8ec.png" class="download-btn" download="">
-            <i class="fas fa-download"></i>
-            <span>23届毕业照</span>
-        </a>
-    </div>
-    
 
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup">
-            <div class="popup-icon">
-                <i class="fas fa-comments"></i>
+    <!-- 2. 初始状态隐藏的液态玻璃信息卡片 -->
+    <div id="infoCard" class="info-card-container">
+        <a href="https://pd.qq.com/s/8845lrn3z" target="_blank" rel="noopener noreferrer" class="info-card-link" id="glassCard">
+            <div class="light-effect" id="lightEffect"></div>
+            <div class="card-title">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                了解更多
             </div>
-            <h3>加入我们的频道吧！</h3>
-            <p>这里有更多学校最新资讯和同学交流，快来加入吧！与同学们一起分享校园生活。</p>
-            <div class="popup-buttons">
-                <button class="popup-btn confirm" id="confirmBtn">我自行加入</button>
-                <button class="popup-btn later" id="laterBtn">稍后</button>
+            <div class="card-content">
+                QQ搜索：<br>
+                <span class="content-highlight">衡阳市成章实验中学</span><br>
+                <span class="content-highlight">/20czsyzx24</span><br>
+                加入频道了解更多
+            </div>
+            <div class="click-indicator">
+                <div class="pulse"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+        </a>
+    </div>
+    
+    <!-- --- 核心改动：添加液态玻璃导航栏 --- -->
+    <div id="iosNav" class="ios-nav-container">
+        <div class="ios-nav">
+            <!-- 涂鸦板 -->
+            <div class="nav-item" data-href="https://docs.qq.com/board/DUUhuanhvT3N3VHVN">
+                <i class="fa fa-paint-brush" aria-hidden="true"></i>
+            </div>
+            <!-- 万能墙 -->
+            <div class="nav-item" data-href="https://qm.qq.com/cgi-bin/qm/qr?k=YEoy6cPSaEgGzb_BY1OJK0YMmbqQQgLY">
+                <i class="fa fa-comments" aria-hidden="true"></i>
+            </div>
+            <!-- 频道问卷 -->
+            <div class="nav-item" data-href="https://www.wjx.cn/vm/wZCc5dd.aspx">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+            </div>
+            <!-- 全景地图 -->
+            <div class="nav-item" data-href="https://vr.3d66.com/next/vr/view/7425846">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
             </div>
         </div>
     </div>
 
     <script>
-        // 下载按钮动画效果
-        const downloadBtns = document.querySelectorAll('.download-btn');
-        downloadBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                if (this.classList.contains('downloading')) return;
-                
-                this.classList.add('downloading');
-                
-                // 模拟下载进度
-                let width = 0;
-                const interval = setInterval(() => {
-                    if (width >= 100) {
-                        clearInterval(interval);
+        document.addEventListener('DOMContentLoaded', function() {
+            const blurOverlay = document.getElementById('blurOverlay');
+            const infoCard = document.getElementById('infoCard');
+            const iosNav = document.getElementById('iosNav');
+            const glassCard = document.getElementById('glassCard');
+            const lightEffect = document.getElementById('lightEffect');
+            
+            // 10秒后显示模糊层、卡片和导航栏
+            setTimeout(function() {
+                blurOverlay.classList.add('active');
+                setTimeout(function() {
+                    infoCard.classList.add('active');
+                    iosNav.classList.add('active'); // 显示导航栏
+                }, 500);
+            }, 10000);
+            
+            // 鼠标光效跟随
+            glassCard.addEventListener('mousemove', function(e) {
+                const rect = glassCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                lightEffect.style.left = `${x}px`;
+                lightEffect.style.top = `${y}px`;
+                lightEffect.style.opacity = '1';
+            });
+            glassCard.addEventListener('mouseleave', function() {
+                lightEffect.style.opacity = '0';
+            });
+            
+            // --- 核心改动：导航栏点击事件和水滴特效 ---
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    const href = this.getAttribute('data-href');
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // 创建水滴元素
+                    const droplet = document.createElement('div');
+                    droplet.classList.add('droplet-effect');
+                    droplet.style.left = `${x}px`;
+                    droplet.style.top = `${y}px`;
+                    
+                    // 添加到当前点击的按钮中
+                    this.appendChild(droplet);
+                    
+                    // 触发动画
+                    setTimeout(() => {
+                        droplet.style.opacity = '1';
+                        droplet.style.transform = 'translate(-50%, -50%) scale(20)';
+                        droplet.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                    }, 10);
+                    
+                    // 动画结束后跳转
+                    setTimeout(() => {
+                        window.open(href, '_blank');
+                        // 移除水滴元素（可选，因为页面会跳转）
                         setTimeout(() => {
-                            this.classList.remove('downloading');
-                        },3000);
-                    } else {
-                        width += 5;
-                        this.querySelector('::after').style.width = width + '%';
-                    }
-                }, 150);
+                            droplet.remove();
+                        }, 100);
+                    }, 700); // 等待动画播放完毕
+                });
             });
         });
-        
-        // 弹窗功能
-        const popupOverlay = document.getElementById('popupOverlay');
-        const confirmBtn = document.getElementById('confirmBtn');
-        const laterBtn = document.getElementById('laterBtn');
-        let reminderInterval;
-        
-        function showPopup() {
-            popupOverlay.classList.add('active');
-        }
-        
-        function hidePopup() {
-            popupOverlay.classList.remove('active');
-        }
-        
-        // 10秒后显示弹窗
-        setTimeout(showPopup, 10000);
-        
-        // 设置定时提醒
-        function setupReminder() {
-            reminderInterval = setInterval(showPopup, 30000); // 30秒一次
-        }
-        
-        // 确认按钮事件
-        confirmBtn.addEventListener('click', () => {
-            hidePopup();
-            clearInterval(reminderInterval);
-            alert('正在加入频道...');
-        });
-        
-        // 稍后按钮事件
-        laterBtn.addEventListener('click', () => {
-            hidePopup();
-        });
-        
-        setupReminder();
     </script>
-
-
-    </body></html>
+</body>
+</html>
